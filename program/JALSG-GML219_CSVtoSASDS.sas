@@ -32,28 +32,22 @@ options nonumber notes nomprint ls=100 ps=9999 formdlim="-" center ;
 /*ODSの出力先として、従来のテキストベースのLISTING（出力ウィンドウ）を有効にする。*/
 ods listing;
 
-*マクロ　FIND_WDの設定において、現在実行しているSASプログラムが置かれているディレクトリの総体パスを指定;
+/* *マクロ　FIND_WDの設定において、現在実行しているSASプログラムが置かれているディレクトリの総体パスを指定; */
 %macro FIND_WD;
-
-%local _fullpath _path;
-%let _fullpath=;
-%let _path=;
-
-%if %length(%sysfunc(getoption(sysin)))=0 %then
-  %let _fullpath=%sysget(sas_execfilepath);
-%else
-  %let _fullpath=%sysfunc(getoption(sysin));
-
-/*(フルパス全体の長さ)-(ファイル名の長さ)-(親フォルダ名の長さ)-(区切り文字\2つ分の長さ)として2階層上のディレクトリパスの長さ*/
-  %let _path=%substr(&_fullpath., 1, %length(&_fullpath.)
-                   -%length(%scan(&_fullpath., -1, '\'))
-                   -%length(%scan(&_fullpath., -2, '\')) -2);
-&_path.
-
+  %local _fullpath _path;
+  %let _fullpath = %sysfunc(getoption(sysin));
+  %if %length(&_fullpath) = 0 %then %let _fullpath = %sysget(sas_execfilepath);
+  %if %length(&_fullpath) = 0 %then %let _fullpath = %superq(_SASPROGRAMFILE);
+  %let _path = %sysfunc(prxchange(s/(\\[^\\]+){2}$//, -1, &_fullpath));
+  &_path.
 %mend FIND_WD;
+
 
 %let cwd=%FIND_WD;
 %put &cwd;
+
+
+
 
 %macro sasds(folder,dsnm);
 proc import out= &dsnm
