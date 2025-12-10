@@ -147,9 +147,14 @@ tables mhterm;
 where MHSPID="baseline1" and MHCAT="PRIMARY DIAGNOSIS";
 run;
 
-proc print data=diseases;
-	var code name_en;
-	where code in (10010
+data diseases_fixed;
+  set diseases;
+  length name_en $200.;
+run;
+
+proc print data=diseases_fixed;
+  var code name_en;
+  where code in (10010
 10300
 10310
 10350
@@ -2347,8 +2352,6 @@ proc sort data=tmp11; by usubjid; run;
 data tmp12;
  merge tmp11 tmp11_dfs; by usubjid; run;
 
-proc freq data=gml219;
-tables i2_trstdt;run;
 
 
 data gml219;
