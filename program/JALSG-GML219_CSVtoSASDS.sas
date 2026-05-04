@@ -755,7 +755,8 @@ run;
 /* CR到達日（最初にCRを記録した評価の日付） */
 data tmp8_crdt(keep=usubjid crfl crdt);
   set RS;
-  where rstestcd = "OVRLRESP" and rsorres = "CR";
+  where rstestcd = "OVRLRESP" and rsorres = "CR"
+    and rsspid in ("evaluation1","evaluation2");  /* 寛解導入2回以内のCRのみ */
   length crdt 8.;
   crdt = input(rsdtc, yymmdd10.);
   format crdt yymmdd10.;
@@ -1320,11 +1321,14 @@ data tmp_efs(keep=usubjid efs_c efsdt);
   /* 再発日 */
   if relapse = "Y" then edt_relapse = reldt;
 
-  /* 治療不応日（DS discontinuation） */
-  /* FAILURE TO MEET CONTINUATION CRITERIA はCR未達成例のみEFSイベント */
-  if dsterm in ("LACK OF EFFICACY","FAILURE TO MEET CONTINUATION CRITERIA")
-    and crfl ne "Y"
-    then edt_fail = dsstdt;
+  /* 治療不応日：LACK OF EFFICACYのみEFSイベント */
+  /* FAILURE TO MEET CONTINUATION CRITERIAはEFSイベントとしない */
+  /* イベント日はRS効果判定日（evaluation2優先、なければevaluation1）を使用 */
+  if dsterm = "LACK OF EFFICACY" then do;
+    if rsdt_ev2 ne . then edt_fail = rsdt_ev2;
+    else if rsdt_ev1 ne . then edt_fail = rsdt_ev1;
+    else edt_fail = dsstdt;
+  end;
 
   /* 死亡日（DS withdrawal） */
   if UPCASE(strip(dsterm2)) = "DEATH" then edt_death = dsstdt2;
