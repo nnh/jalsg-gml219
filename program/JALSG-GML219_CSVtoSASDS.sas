@@ -82,6 +82,8 @@ run ;
 %sasds_sdtm(RS);
 %sasds_sdtm(SC);
 %sasds_sdtm(VS);
+%sasds_sdtm(MB);
+%sasds_sdtm(PR);
 
 /* 外部ファイル */
 %sasds_ext(facilities);
@@ -506,7 +508,7 @@ data tmp3_labs(keep=usubjid
     del5q      = "del(5q)"
     mns7       = "モノソミー7"
     mns17abn   = "17p異常"
-    cta3km     = "複合核型（?3異常）"
+    cta3km     = "複合核型（3種類以上の異常）"
     otchrabn   = "その他染色体異常"
     chroabno   = "染色体異常（有無）"
     cd2="CD2" cd3="CD3" cd4="CD4" cd5="CD5" cd7="CD7" cd8="CD8"
@@ -568,7 +570,7 @@ data tmp5a_vs(keep=usubjid height weight bmi);
   if height > 0 then bmi = weight / (height/100)**2;
   label height = "身長（cm）"
         weight = "体重（kg）"
-        bmi    = "BMI（kg/m?）";
+        bmi    = "BMI（kg/m2）";
 run;
 
 /* 5b. ECOG PS */
@@ -764,13 +766,21 @@ run;
 
 proc sort data=tmp8_crdt; by usubjid crdt; run;
 
-data tmp8_cr(keep=usubjid crfl crdt);
+data tmp8_cr(keep=usubjid crfl crdt lfsfl lfsdt);
   set tmp8_crdt;
   by usubjid;
   if first.usubjid;
   crfl = "Y";
-  label crfl = "CR到達（Y/N）"
-        crdt = "初回CR評価日（LFS起算日）";
+  /* PRT v2.4 §8.1.3: LFS = 骨髄芽球<5% かつ 髄外病変なし。CR ⊃ LFS。       */
+  /* 現実装は CR 達成 = LFS 達成として扱う（保守的近似）。                  */
+  /* TODO: 厳密 LFS 判定（CRi 含む）は LB(骨髄芽球%) + FA(髄外病変)から派生要 */
+  lfsfl = "Y";
+  lfsdt = crdt;
+  format crdt lfsdt yymmdd10.;
+  label crfl  = "CR到達（Y/N）"
+        crdt  = "初回CR評価日"
+        lfsfl = "LFS到達（Y/N）"
+        lfsdt = "LFS到達日（RFS 起算日）";
 run;
 
 
@@ -863,7 +873,7 @@ data tmp11a_i1dnr(keep=usubjid ind1stdt ind1enddt ind1dnrdose);
   format ind1stdt ind1enddt yymmdd10.;
   label ind1stdt   = "寛解導入1開始日"
         ind1enddt  = "寛解導入1終了日"
-        ind1dnrdose= "寛解導入1 DNR総投与量（mg/m?）";
+        ind1dnrdose= "寛解導入1 DNR総投与量（mg/m2）";
 run;
 
 /* 寛解導入1（AraC） */
@@ -871,7 +881,7 @@ data tmp11b_i1ara(keep=usubjid ind1aradose);
   set tmp11_ec;
   where ecspid = "induction1" and ectrt = "CYTARABINE";
   ind1aradose = dose_n;
-  label ind1aradose = "寛解導入1 AraC総投与量（mg/m?）";
+  label ind1aradose = "寛解導入1 AraC総投与量（mg/m2）";
 run;
 
 /* 寛解導入2（DNR） */
@@ -884,7 +894,7 @@ data tmp11c_i2dnr(keep=usubjid ind2stdt ind2enddt ind2dnrdose);
   format ind2stdt ind2enddt yymmdd10.;
   label ind2stdt   = "寛解導入2開始日"
         ind2enddt  = "寛解導入2終了日"
-        ind2dnrdose= "寛解導入2 DNR総投与量（mg/m?）";
+        ind2dnrdose= "寛解導入2 DNR総投与量（mg/m2）";
 run;
 
 /* 寛解導入2（AraC） */
@@ -892,7 +902,7 @@ data tmp11d_i2ara(keep=usubjid ind2aradose);
   set tmp11_ec;
   where ecspid = "induction2" and ectrt = "CYTARABINE";
   ind2aradose = dose_n;
-  label ind2aradose = "寛解導入2 AraC総投与量（mg/m?）";
+  label ind2aradose = "寛解導入2 AraC総投与量（mg/m2）";
 run;
 
 /* 地固め1（MIT） */
@@ -905,7 +915,7 @@ data tmp11e_c1mit(keep=usubjid c1stdt c1enddt c1mitdose);
   format c1stdt c1enddt yymmdd10.;
   label c1stdt   = "地固め1開始日"
         c1enddt  = "地固め1終了日"
-        c1mitdose= "地固め1 MIT総投与量（mg/m?）";
+        c1mitdose= "地固め1 MIT総投与量（mg/m2）";
 run;
 
 /* 地固め1（AraC） */
@@ -913,7 +923,7 @@ data tmp11f_c1ara(keep=usubjid c1aradose);
   set tmp11_ec;
   where ecspid = "consolidation1" and ectrt = "CYTARABINE";
   c1aradose = dose_n;
-  label c1aradose = "地固め1 AraC総投与量（mg/m?）";
+  label c1aradose = "地固め1 AraC総投与量（mg/m2）";
 run;
 
 /* 地固め2（DNR） */
@@ -926,7 +936,7 @@ data tmp11g_c2dnr(keep=usubjid c2stdt c2enddt c2dnrdose);
   format c2stdt c2enddt yymmdd10.;
   label c2stdt   = "地固め2開始日"
         c2enddt  = "地固め2終了日"
-        c2dnrdose= "地固め2 DNR総投与量（mg/m?）";
+        c2dnrdose= "地固め2 DNR総投与量（mg/m2）";
 run;
 
 /* 地固め2（AraC） */
@@ -934,7 +944,7 @@ data tmp11h_c2ara(keep=usubjid c2aradose);
   set tmp11_ec;
   where ecspid = "consolidation2" and ectrt = "CYTARABINE";
   c2aradose = dose_n;
-  label c2aradose = "地固め2 AraC総投与量（mg/m?）";
+  label c2aradose = "地固め2 AraC総投与量（mg/m2）";
 run;
 
 /* 地固め3（ACR） */
@@ -947,7 +957,7 @@ data tmp11i_c3acr(keep=usubjid c3stdt c3enddt c3acrdose);
   format c3stdt c3enddt yymmdd10.;
   label c3stdt   = "地固め3開始日"
         c3enddt  = "地固め3終了日"
-        c3acrdose= "地固め3 ACR総投与量（mg/m?）";
+        c3acrdose= "地固め3 ACR総投与量（mg/m2）";
 run;
 
 /* 地固め3（AraC） */
@@ -955,7 +965,7 @@ data tmp11j_c3ara(keep=usubjid c3aradose);
   set tmp11_ec;
   where ecspid = "consolidation3" and ectrt = "CYTARABINE";
   c3aradose = dose_n;
-  label c3aradose = "地固め3 AraC総投与量（mg/m?）";
+  label c3aradose = "地固め3 AraC総投与量（mg/m2）";
 run;
 
 /* 髄注（TIT：INTRATHECAL）*/
@@ -1265,6 +1275,210 @@ run;
 
 
 /***===================================================================================***/
+/***===================================================================================***/
+/*** 14a. 後治療：放射線療法・造血細胞移植（PR ドメイン）                              ***/
+/***===================================================================================***/
+
+/* PR は 1 患者×複数行。PRSPID="after-treatment" でフィルタ。 */
+/* PRTRT="RADIATION" or "TRANSPLANTATION" の行で PROCCUR と日付を取得。 */
+proc sort data=PR out=tmp14a_pr; by usubjid; run;
+
+data tmp14a_pttx_rh(keep=usubjid pttx_radio_fl pttx_radio_dt pttx_hsct_fl pttx_hsct_dt);
+  set tmp14a_pr;
+  where prspid = "after-treatment" and prtrt in ("RADIATION","TRANSPLANTATION");
+  by usubjid;
+  retain pttx_radio_fl pttx_radio_dt pttx_hsct_fl pttx_hsct_dt;
+  length pttx_radio_fl pttx_hsct_fl $5.;
+  if first.usubjid then do;
+    pttx_radio_fl = ""; call missing(pttx_radio_dt);
+    pttx_hsct_fl  = ""; call missing(pttx_hsct_dt);
+  end;
+  if prtrt = "RADIATION" then do;
+    pttx_radio_fl = strip(proccur);
+    if proccur = "Y" then pttx_radio_dt = input(prstdtc, yymmdd10.);
+  end;
+  if prtrt = "TRANSPLANTATION" then do;
+    pttx_hsct_fl = strip(proccur);
+    if proccur = "Y" then pttx_hsct_dt = input(prstdtc, yymmdd10.);
+  end;
+  if last.usubjid then output;
+  format pttx_radio_dt pttx_hsct_dt yymmdd10.;
+  label pttx_radio_fl = "放射線療法実施フラグ"
+        pttx_radio_dt = "放射線療法実施日"
+        pttx_hsct_fl  = "造血細胞移植実施フラグ"
+        pttx_hsct_dt  = "造血細胞移植実施日";
+run;
+
+
+/***===================================================================================***/
+/*** 14b. 後治療：移植片種類・ドナー情報（PR ドメイン）                                ***/
+/***===================================================================================***/
+
+/* PRTRT="BMT"/"PBSCT"/"CBSCT" の行で移植片種類とドナー区分を取得。 */
+data tmp14b_pttx_graft(keep=usubjid pttx_graft pttx_donor);
+  set tmp14a_pr;
+  where prspid = "after-treatment" and prtrt in ("BMT","PBSCT","CBSCT");
+  length pttx_graft $20. pttx_donor $30.;
+  if      prtrt = "BMT"   then pttx_graft = "骨髄";
+  else if prtrt = "PBSCT" then pttx_graft = "末梢血";
+  else if prtrt = "CBSCT" then pttx_graft = "臍帯血";
+  else                         pttx_graft = "その他";
+  if      prcat = "RELATED DONOR"   then pttx_donor = "血縁ドナー";
+  else if prcat = "UNRELATED DONOR" then pttx_donor = "非血縁ドナー";
+  label pttx_graft = "移植片種類"
+        pttx_donor = "ドナー情報";
+run;
+proc sort data=tmp14b_pttx_graft nodupkey; by usubjid; run;
+
+
+/***===================================================================================***/
+/*** 14c. 後治療：移植時病期・HLA一致度（FA ドメイン）                                 ***/
+/***===================================================================================***/
+
+data tmp14c_fa_beftrans(keep=usubjid pttx_beftrans);
+  set FA;
+  where fatestcd = "BEFTRANS";
+  length pttx_beftrans $20.;
+  pttx_beftrans = strip(faorres);
+  label pttx_beftrans = "移植時病期";
+run;
+proc sort data=tmp14c_fa_beftrans nodupkey; by usubjid; run;
+
+data tmp14d_fa_comptbl(keep=usubjid pttx_hla);
+  set FA;
+  where fatestcd = "COMPTBL";
+  length pttx_hla $20.;
+  pttx_hla = strip(faorres);
+  label pttx_hla = "HLA一致度";
+run;
+proc sort data=tmp14d_fa_comptbl nodupkey; by usubjid; run;
+
+
+/***===================================================================================***/
+/*** 14e. 後治療：JDCHCT TRUMP番号・JMDPバンク登録（SC ドメイン）                       ***/
+/***===================================================================================***/
+
+proc sort data=SC out=tmp14e_sc_src; by usubjid; run;
+
+data tmp14e_sc(keep=usubjid pttx_trump pttx_jmdp);
+  set tmp14e_sc_src;
+  by usubjid;
+  retain pttx_trump pttx_jmdp;
+  length pttx_trump $30. pttx_jmdp $20.;
+  if first.usubjid then do;
+    pttx_trump = ""; pttx_jmdp = "";
+  end;
+  if sctestcd in ("TRUMPNUM","TRUMP Number") then pttx_trump = strip(scorres);
+  if sctestcd in ("RGJMDPBK","Registration of JMDP Bank") then pttx_jmdp = strip(scorres);
+  if last.usubjid then output;
+  label pttx_trump = "JDCHCT TRUMP番号"
+        pttx_jmdp  = "JMDPバンク登録";
+run;
+
+
+/***===================================================================================***/
+/*** 14f. 後治療：移植前処置（CM ドメイン）                                            ***/
+/***===================================================================================***/
+
+data tmp14f_cm(keep=usubjid pttx_cond pttx_cond_dt);
+  set CM;
+  where cmspid = "after-treatment";
+  length pttx_cond $30.;
+  if      cmtrt = "Myeloablative Conditioning"   then pttx_cond = "骨髄破壊的";
+  else if cmtrt = "Reduced-toxicity Conditioning" then pttx_cond = "骨髄非破壊的";
+  else                                                 pttx_cond = strip(cmtrt);
+  pttx_cond_dt = input(cmstdtc, yymmdd10.);
+  format pttx_cond_dt yymmdd10.;
+  label pttx_cond    = "移植前処置"
+        pttx_cond_dt = "移植前処置開始日";
+run;
+proc sort data=tmp14f_cm nodupkey; by usubjid; run;
+
+
+/***===================================================================================***/
+/*** 14g. 試験治療完了フラグ（DS, DSSPID="discontinuation"）                           ***/
+/***===================================================================================***/
+/* aCRF 27 試験治療終了報告: DSTERM="完了/COMPLETED" の場合のみ完了 */
+
+data tmp14g_compfl(keep=usubjid compfl);
+  set tmp10a_disc;
+  length compfl $3.;
+  if upcase(strip(dsterm)) = "COMPLETED" then compfl = "Y";
+  else compfl = "N";
+  label compfl = "試験治療完了フラグ（COMPLETED）";
+run;
+proc sort data=tmp14g_compfl; by usubjid; run;
+
+
+/***===================================================================================***/
+/*** 14h. MB ドメイン：コース別 起因菌名 concat                                        ***/
+/***===================================================================================***/
+
+data tmp14h_mb;
+  set MB;
+  where mbtestcd = "PATHOGEN" and mborres ne "";
+  length cycle $4.;
+  if      mbspid = "induction1ae"     then cycle = "i1";
+  else if mbspid = "induction2ae"     then cycle = "i2";
+  else if mbspid = "consolidation1ae" then cycle = "c1";
+  else if mbspid = "consolidation2ae" then cycle = "c2";
+  else if mbspid = "consolidation3ae" then cycle = "c3";
+run;
+proc sort data=tmp14h_mb; by usubjid cycle; run;
+
+data tmp14h_mb_concat(keep=usubjid cycle pathogens);
+  set tmp14h_mb;
+  by usubjid cycle;
+  length pathogens $1000.;
+  retain pathogens;
+  if first.cycle then pathogens = strip(mborres);
+  else pathogens = strip(pathogens) || "; " || strip(mborres);
+  if last.cycle then output;
+run;
+
+proc transpose data=tmp14h_mb_concat out=tmp14h_mb_w(drop=_name_) prefix=mb_;
+  by usubjid;
+  id cycle;
+  var pathogens;
+run;
+
+data tmp14h_mb_final;
+  set tmp14h_mb_w;
+  length mb_i1 mb_i2 mb_c1 mb_c2 mb_c3 $1000.;
+  if missing(mb_i1) then mb_i1 = "";
+  if missing(mb_i2) then mb_i2 = "";
+  if missing(mb_c1) then mb_c1 = "";
+  if missing(mb_c2) then mb_c2 = "";
+  if missing(mb_c3) then mb_c3 = "";
+  label mb_i1 = "起因菌（寛解導入1）"
+        mb_i2 = "起因菌（寛解導入2）"
+        mb_c1 = "起因菌（地固め1）"
+        mb_c2 = "起因菌（地固め2）"
+        mb_c3 = "起因菌（地固め3）";
+  keep usubjid mb_i1 mb_i2 mb_c1 mb_c2 mb_c3;
+run;
+proc sort data=tmp14h_mb_final; by usubjid; run;
+
+
+/***===================================================================================***/
+/*** 14i. SAE long データセット（gml219_sae 用、AESER="Y" の AEDECOD ピボット）         ***/
+/***===================================================================================***/
+
+data tmp14i_sae_pt;
+  set AE;
+  where aeser = "Y" and aedecod ne "";
+  length saept $200. saefl $3.;
+  saept = strip(aedecod);
+  saefl = "Y";
+  aestdt = input(aestdtc, yymmdd10.);
+  format aestdt yymmdd10.;
+  keep usubjid aeseq saept saefl aestdt;
+  label saept  = "SAE PT（Preferred Term）"
+        saefl  = "SAE フラグ"
+        aestdt = "SAE 発生日";
+run;
+proc sort data=tmp14i_sae_pt nodupkey; by usubjid saept; run;
+
 /*** 15. すべての一時データセットをマージして中間データセット（tmpall）を作成           ***/
 /***===================================================================================***/
 
@@ -1285,6 +1499,10 @@ run;
 %sortt(tmp12_aefull);
 %sortt(tmp13_wt1f);
 %sortt(tmp14_sae);
+%sortt(tmp14a_pttx_rh); %sortt(tmp14b_pttx_graft);
+%sortt(tmp14c_fa_beftrans); %sortt(tmp14d_fa_comptbl);
+%sortt(tmp14e_sc); %sortt(tmp14f_cm); %sortt(tmp14g_compfl);
+%sortt(tmp14h_mb_final);
 
 data tmpall;
   merge tmp1
@@ -1299,7 +1517,11 @@ data tmpall;
         tmp11_tx
         tmp12_aefull
         tmp13_wt1f
-        tmp14_sae;
+        tmp14_sae
+        tmp14a_pttx_rh tmp14b_pttx_graft
+        tmp14c_fa_beftrans tmp14d_fa_comptbl
+        tmp14e_sc tmp14f_cm tmp14g_compfl
+        tmp14h_mb_final;
   by usubjid;
 run;
 
@@ -1429,6 +1651,19 @@ data gml219;
   /* CR未到達フラグ補完 */
   if crfl = "" then crfl = "N";
 
+  /* LFS フラグ補完（CR ⊃ LFS） */
+  if lfsfl = "" then lfsfl = "N";
+
+  /* 治療不応フラグ（PRT §8.1.3）：暫定的に CR 未達成 = 治療不応 */
+  /* TODO: 厳密 3 カテゴリ判定（resistant/aplasia/undetermined）への拡張可 */
+  length tffl $3. tftype $20.;
+  if crfl = "Y" then do;
+    tffl = "N"; tftype = "";
+  end;
+  else do;
+    tffl = "Y"; tftype = "U";
+  end;
+
   /* EFS 生存時間（日・月・年） */
   efs_d = efsdt  - rfstdt + 1;
   efs_m = efs_d / (365.25/12);
@@ -1439,9 +1674,9 @@ data gml219;
   os_m  = os_d  / (365.25/12);
   os_y  = os_d  / 365.25;
 
-  /* RFS 生存時間（CR例のみ、crdt から） */
-  if crfl = "Y" and crdt ne . then do;
-    rfs_d = rfsdt - crdt + 1;
+  /* RFS 生存時間（PRT v2.4 §8.1.1: 対象=CR例、起算=LFS到達日 lfsdt） */
+  if crfl = "Y" and lfsdt ne . then do;
+    rfs_d = rfsdt - lfsdt + 1;
     rfs_m = rfs_d / (365.25/12);
     rfs_y = rfs_d / 365.25;
   end;
@@ -1488,7 +1723,19 @@ data gml219;
     agegrp = "年齢グループ（65-69/70-74）"
     fabgrp = "FABグループ（M0/M6/M7 vs Others）"
     whogrp = "WHOグループ（t-MN/AML-MRC vs Others）"
-    molgrp = "分子病型グループ（FLT3-ITD/NPM1/Other）";
+    molgrp = "分子病型グループ（FLT3-ITD/NPM1/Other）"
+    lfsfl  = "LFS到達（Y/N）"
+    tffl   = "治療不応フラグ"
+    tftype = "治療不応カテゴリ（R=resistant/A=aplasia/U=undetermined）";
+run;
+
+
+/***===================================================================================***/
+/*** 17b. SAE long データセット作成（adslib.gml219_sae、Table6 用）                    ***/
+/***===================================================================================***/
+
+data adslib.gml219_sae;
+  set tmp14i_sae_pt;
 run;
 
 
@@ -1522,6 +1769,7 @@ libname adslib clear;
 proc contents
 data=work.gml219;
 run;
+
 
 /*====================================================================================*/
 /* ログリセット                                                                       */

@@ -12,5 +12,7 @@
 *.csv
 *.dat
 *.png
+*.log
+*.lst
 /program/Archives
 program/work.sas
