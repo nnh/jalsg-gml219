@@ -38,7 +38,7 @@ run;
 /*====================================================================================*/
 /* libname                                                                            */
 /*====================================================================================*/
-libname adslib "&_root./input/ads/202512 data";
+libname adslib "&_root./input/ads";
 
 /*====================================================================================*/
 /* CSVファイルインポート用マクロ                                                     */
@@ -256,13 +256,94 @@ proc transpose data=tmp2d_cci_sum out=tmp2d_cci_t prefix=cci;
   var ccisum;
 run;
 
-data tmp2d_cci(keep=usubjid cci_bl cci_c1);
-  set tmp2d_cci_t;
-  length cci_bl cci_c1 8.;
+/* CCI 詳細データの有無フラグおよび疾患別フラグ */
+proc sql;
+  create table tmp2d_cci_fl as
+  select usubjid,
+    max(case when ccispid="baseline_cci" and mhoccur ne "" then "Y" else "" end) as cci_bl_fl   length=1 label="CCI詳細データ有無（登録時）",
+    max(case when ccispid="consoli1_cci" and mhoccur ne "" then "Y" else "" end) as cci_c1_fl   length=1 label="CCI詳細データ有無（地固め1後）",
+    max(case when ccispid="baseline_cci" and cciterm_std="MI"          and mhoccur="Y" then "Y" else "" end) as cci_bl_MI   length=1 label="心筋梗塞（登録時）",
+    max(case when ccispid="consoli1_cci" and cciterm_std="MI"          and mhoccur="Y" then "Y" else "" end) as cci_c1_MI   length=1 label="心筋梗塞（地固め1後）",
+    max(case when ccispid="baseline_cci" and cciterm_std="CHF"         and mhoccur="Y" then "Y" else "" end) as cci_bl_CHF  length=1 label="うっ血性心不全（登録時）",
+    max(case when ccispid="consoli1_cci" and cciterm_std="CHF"         and mhoccur="Y" then "Y" else "" end) as cci_c1_CHF  length=1 label="うっ血性心不全（地固め1後）",
+    max(case when ccispid="baseline_cci" and cciterm_std="PVD"         and mhoccur="Y" then "Y" else "" end) as cci_bl_PVD  length=1 label="末梢血管障害（登録時）",
+    max(case when ccispid="consoli1_cci" and cciterm_std="PVD"         and mhoccur="Y" then "Y" else "" end) as cci_c1_PVD  length=1 label="末梢血管障害（地固め1後）",
+    max(case when ccispid="baseline_cci" and cciterm_std="CVD"         and mhoccur="Y" then "Y" else "" end) as cci_bl_CVD  length=1 label="脳血管障害（登録時）",
+    max(case when ccispid="consoli1_cci" and cciterm_std="CVD"         and mhoccur="Y" then "Y" else "" end) as cci_c1_CVD  length=1 label="脳血管障害（地固め1後）",
+    max(case when ccispid="baseline_cci" and cciterm_std="Dementia"    and mhoccur="Y" then "Y" else "" end) as cci_bl_Dem  length=1 label="認知症（登録時）",
+    max(case when ccispid="consoli1_cci" and cciterm_std="Dementia"    and mhoccur="Y" then "Y" else "" end) as cci_c1_Dem  length=1 label="認知症（地固め1後）",
+    max(case when ccispid="baseline_cci" and cciterm_std="CLD"         and mhoccur="Y" then "Y" else "" end) as cci_bl_CLD  length=1 label="慢性肺疾患（登録時）",
+    max(case when ccispid="consoli1_cci" and cciterm_std="CLD"         and mhoccur="Y" then "Y" else "" end) as cci_c1_CLD  length=1 label="慢性肺疾患（地固め1後）",
+    max(case when ccispid="baseline_cci" and cciterm_std="Collagen"    and mhoccur="Y" then "Y" else "" end) as cci_bl_Col  length=1 label="膠原病（登録時）",
+    max(case when ccispid="consoli1_cci" and cciterm_std="Collagen"    and mhoccur="Y" then "Y" else "" end) as cci_c1_Col  length=1 label="膠原病（地固め1後）",
+    max(case when ccispid="baseline_cci" and cciterm_std="PepticUlcer" and mhoccur="Y" then "Y" else "" end) as cci_bl_PU   length=1 label="消化性潰瘍（登録時）",
+    max(case when ccispid="consoli1_cci" and cciterm_std="PepticUlcer" and mhoccur="Y" then "Y" else "" end) as cci_c1_PU   length=1 label="消化性潰瘍（地固め1後）",
+    max(case when ccispid="baseline_cci" and cciterm_std="MildLiver"   and mhoccur="Y" then "Y" else "" end) as cci_bl_MLiv length=1 label="軽度肝疾患（登録時）",
+    max(case when ccispid="consoli1_cci" and cciterm_std="MildLiver"   and mhoccur="Y" then "Y" else "" end) as cci_c1_MLiv length=1 label="軽度肝疾患（地固め1後）",
+    max(case when ccispid="baseline_cci" and cciterm_std="SevLiver"    and mhoccur="Y" then "Y" else "" end) as cci_bl_SLiv length=1 label="肝機能障害中等度から高度（登録時）",
+    max(case when ccispid="consoli1_cci" and cciterm_std="SevLiver"    and mhoccur="Y" then "Y" else "" end) as cci_c1_SLiv length=1 label="肝機能障害中等度から高度（地固め1後）",
+    max(case when ccispid="baseline_cci" and cciterm_std="DiabComp"    and mhoccur="Y" then "Y" else "" end) as cci_bl_DC   length=1 label="糖尿病合併症（登録時）",
+    max(case when ccispid="consoli1_cci" and cciterm_std="DiabComp"    and mhoccur="Y" then "Y" else "" end) as cci_c1_DC   length=1 label="糖尿病合併症（地固め1後）",
+    max(case when ccispid="baseline_cci" and cciterm_std="Hemiplegia"  and mhoccur="Y" then "Y" else "" end) as cci_bl_Hemi length=1 label="片麻痺（登録時）",
+    max(case when ccispid="consoli1_cci" and cciterm_std="Hemiplegia"  and mhoccur="Y" then "Y" else "" end) as cci_c1_Hemi length=1 label="片麻痺（地固め1後）",
+    max(case when ccispid="baseline_cci" and cciterm_std="SevRenal"    and mhoccur="Y" then "Y" else "" end) as cci_bl_SR   length=1 label="腎機能障害中等度から高度（登録時）",
+    max(case when ccispid="consoli1_cci" and cciterm_std="SevRenal"    and mhoccur="Y" then "Y" else "" end) as cci_c1_SR   length=1 label="腎機能障害中等度から高度（地固め1後）",
+    max(case when ccispid="baseline_cci" and cciterm_std="Metastasis"  and mhoccur="Y" then "Y" else "" end) as cci_bl_Met  length=1 label="固形癌転移（登録時）",
+    max(case when ccispid="consoli1_cci" and cciterm_std="Metastasis"  and mhoccur="Y" then "Y" else "" end) as cci_c1_Met  length=1 label="固形癌転移（地固め1後）",
+    max(case when ccispid="baseline_cci" and cciterm_std="Leukemia"    and mhoccur="Y" then "Y" else "" end) as cci_bl_Leu  length=1 label="白血病（登録時）",
+    max(case when ccispid="consoli1_cci" and cciterm_std="Leukemia"    and mhoccur="Y" then "Y" else "" end) as cci_c1_Leu  length=1 label="白血病（地固め1後）",
+    max(case when ccispid="baseline_cci" and cciterm_std="Lymphoma"    and mhoccur="Y" then "Y" else "" end) as cci_bl_Lym  length=1 label="リンパ系腫瘍（登録時）",
+    max(case when ccispid="consoli1_cci" and cciterm_std="Lymphoma"    and mhoccur="Y" then "Y" else "" end) as cci_c1_Lym  length=1 label="リンパ系腫瘍（地固め1後）",
+    max(case when ccispid="baseline_cci" and cciterm_std="AIDS"        and mhoccur="Y" then "Y" else "" end) as cci_bl_AIDS length=1 label="AIDS（登録時）",
+    max(case when ccispid="consoli1_cci" and cciterm_std="AIDS"        and mhoccur="Y" then "Y" else "" end) as cci_c1_AIDS length=1 label="AIDS（地固め1後）"
+  from tmp2d_cci_items
+  where cciterm_std ne ""
+  group by usubjid;
+quit;
+
+data tmp2d_cci(keep=usubjid cci_bl cci_c1 cci_bl_fl cci_c1_fl
+                    cci_bl_MI  cci_c1_MI  cci_bl_CHF  cci_c1_CHF
+                    cci_bl_PVD cci_c1_PVD cci_bl_CVD  cci_c1_CVD
+                    cci_bl_Dem cci_c1_Dem cci_bl_CLD  cci_c1_CLD
+                    cci_bl_Col cci_c1_Col cci_bl_PU   cci_c1_PU
+                    cci_bl_MLiv cci_c1_MLiv cci_bl_SLiv cci_c1_SLiv
+                    cci_bl_DC  cci_c1_DC  cci_bl_Hemi cci_c1_Hemi
+                    cci_bl_SR  cci_c1_SR  cci_bl_Met  cci_c1_Met
+                    cci_bl_Leu cci_c1_Leu cci_bl_Lym  cci_c1_Lym
+                    cci_bl_AIDS cci_c1_AIDS);
+  merge tmp2d_cci_t tmp2d_cci_fl;
+  by usubjid;
+  length cci_bl cci_c1 8.
+         cci_bl_fl  cci_c1_fl
+         cci_bl_MI  cci_c1_MI  cci_bl_CHF  cci_c1_CHF
+         cci_bl_PVD cci_c1_PVD cci_bl_CVD  cci_c1_CVD
+         cci_bl_Dem cci_c1_Dem cci_bl_CLD  cci_c1_CLD
+         cci_bl_Col cci_c1_Col cci_bl_PU   cci_c1_PU
+         cci_bl_MLiv cci_c1_MLiv cci_bl_SLiv cci_c1_SLiv
+         cci_bl_DC  cci_c1_DC  cci_bl_Hemi cci_c1_Hemi
+         cci_bl_SR  cci_c1_SR  cci_bl_Met  cci_c1_Met
+         cci_bl_Leu cci_c1_Leu cci_bl_Lym  cci_c1_Lym
+         cci_bl_AIDS cci_c1_AIDS $1.;
   if cmiss(ccibaseline_cci) then cci_bl = 0; else cci_bl = ccibaseline_cci;
   if cmiss(cciconsoli1_cci) then cci_c1 = 0; else cci_c1 = cciconsoli1_cci;
-  label cci_bl = "Charlson合併症スコア（登録時）"
-        cci_c1 = "Charlson合併症スコア（地固め1後）";
+  array _fl{*} $ cci_bl_fl  cci_c1_fl
+               cci_bl_MI  cci_c1_MI  cci_bl_CHF  cci_c1_CHF
+               cci_bl_PVD cci_c1_PVD cci_bl_CVD  cci_c1_CVD
+               cci_bl_Dem cci_c1_Dem cci_bl_CLD  cci_c1_CLD
+               cci_bl_Col cci_c1_Col cci_bl_PU   cci_c1_PU
+               cci_bl_MLiv cci_c1_MLiv cci_bl_SLiv cci_c1_SLiv
+               cci_bl_DC  cci_c1_DC  cci_bl_Hemi cci_c1_Hemi
+               cci_bl_SR  cci_c1_SR  cci_bl_Met  cci_c1_Met
+               cci_bl_Leu cci_c1_Leu cci_bl_Lym  cci_c1_Lym
+               cci_bl_AIDS cci_c1_AIDS;
+  do _i = 1 to dim(_fl);
+    if _fl{_i} = "" then _fl{_i} = "N";
+  end;
+  drop _i;
+  label cci_bl    = "Charlson合併症スコア（登録時）"
+        cci_c1    = "Charlson合併症スコア（地固め1後）"
+        cci_bl_fl = "CCI詳細データ有無（登録時）"
+        cci_c1_fl = "CCI詳細データ有無（地固め1後）";
 run;
 
 
@@ -278,6 +359,15 @@ data tmp3_lb;
 run;
 
 proc sort data=tmp3_lb; by usubjid lbtestcd; run;
+
+/* 染色体検査施行状況（LBSTAT） */
+data tmp3_chroabno_stat(keep=usubjid chroabno_stat);
+  set tmp3_lb;
+  where lbtestcd = "CHROABNO";
+  length chroabno_stat $10.;
+  chroabno_stat = strip(lbstat);
+  label chroabno_stat = "染色体検査施行状況（LBSTAT）";
+run;
 
 proc transpose data=tmp3_lb out=tmp3_lb_t prefix=_lb_;
   by usubjid;
@@ -384,8 +474,8 @@ data tmp3_labs(keep=usubjid
     bl_hgb     = "Baseline Hgb（g/dL）"
     bl_plat    = "Baseline 血小板（万/μL）"
     bl_retirbc = "Baseline 網赤血球数"
-    bl_blastle = "Baseline 末梢血芽球比率（%）"
-    bl_myblale = "Baseline 骨髄芽球比率（%）"
+    bl_blastle = "Baseline 末梢血芽球比率（％）"
+    bl_myblale = "Baseline 骨髄芽球比率（％）"
     bl_mpo     = "Baseline MPO（IU/L）"
     bl_ldh     = "Baseline LDH（IU/L）"
     bl_ast     = "Baseline AST（IU/L）"
@@ -1198,7 +1288,7 @@ run;
 data tmpall;
   merge tmp1
         tmp2a_who tmp2b_fab tmp2c_gen tmp2d_cci
-        tmp3_labs tmp4_eln
+        tmp3_labs tmp3_chroabno_stat tmp4_eln
         tmp5a_vs tmp5b_ecog tmp5c_echo tmp5d_ecg
         tmp6_cga_final
         tmp7_ext
@@ -1408,11 +1498,19 @@ run;
 /* Excel ファイル */
 proc export
   data=work.gml219
-  outfile= "&_root./input/ads/202512 data/gml219_new.xlsx"
+  outfile= "&_root./input/ads/gml219.xlsx"
   dbms=xlsx
   replace;
 run;
 
+
+/* CSV ファイル */
+proc export
+  data=work.gml219
+  outfile= "&_root./input/ads/gml219.csv"
+  dbms=csv
+  replace;
+run;
 libname adslib clear;
 
 /*====================================================================================*/
