@@ -1321,7 +1321,9 @@ data tmp_efs(keep=usubjid efs_c efsdt);
   if relapse = "Y" then edt_relapse = reldt;
 
   /* 治療不応日（DS discontinuation） */
+  /* FAILURE TO MEET CONTINUATION CRITERIA はCR未達成例のみEFSイベント */
   if dsterm in ("LACK OF EFFICACY","FAILURE TO MEET CONTINUATION CRITERIA")
+    and crfl ne "Y"
     then edt_fail = dsstdt;
 
   /* 死亡日（DS withdrawal） */
@@ -1332,7 +1334,7 @@ data tmp_efs(keep=usubjid efs_c efsdt);
 
   if edt_earliest = . then do;
     efs_c = 0;
-    efsdt = &cutdt.;
+    efsdt = dsstdt2;  /* 最終追跡日（DS FOLLOW-UP withdrawal） */
   end;
   else do;
     efs_c = 1;
@@ -1356,7 +1358,7 @@ data tmp_os(keep=usubjid os_c osdt);
   end;
   else do;
     os_c = 0;
-    osdt = &cutdt.;
+    osdt = dsstdt2;   /* 最終追跡日（DS FOLLOW-UP withdrawal） */
   end;
 
   format osdt yymmdd10.;
@@ -1383,7 +1385,7 @@ data tmp_rfs(keep=usubjid rfs_c rfsdt);
 
   if edt_rfs_earliest = . then do;
     rfs_c = 0;
-    rfsdt = &cutdt.;
+    rfsdt = dsstdt2;  /* 最終追跡日（DS FOLLOW-UP withdrawal） */
   end;
   else do;
     rfs_c = 1;
