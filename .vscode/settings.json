@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "*.sas": "sas"
+    },
+    "[sas]": {
+        "files.encoding": "shiftjis"
+    }
+}
