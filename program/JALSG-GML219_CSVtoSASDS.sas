@@ -1321,13 +1321,13 @@ data tmp_efs(keep=usubjid efs_c efsdt);
   /* 再発日 */
   if relapse = "Y" then edt_relapse = reldt;
 
-  /* 治療不応日：LACK OF EFFICACYのみEFSイベント */
-  /* FAILURE TO MEET CONTINUATION CRITERIAはEFSイベントとしない */
-  /* イベント日はRS効果判定日（evaluation2優先、なければevaluation1）を使用 */
-  if dsterm = "LACK OF EFFICACY" then do;
+  /* 治療不応日：DS中止理由によらずRS評価から直接判定 */
+  /* CR未達成（crfl ne "Y"）かつRS評価実施済みの場合にEFSイベントを設定 */
+  /*   evaluation2実施済み → eval2 RSDTC（2回目で非寛解確定） */
+  /*   evaluation1のみ     → eval1 RSDTC（1回で非寛解、2回目実施不可） */
+  if crfl ne "Y" then do;
     if rsdt_ev2 ne . then edt_fail = rsdt_ev2;
     else if rsdt_ev1 ne . then edt_fail = rsdt_ev1;
-    else edt_fail = dsstdt;
   end;
 
   /* 死亡日（DS withdrawal） */
