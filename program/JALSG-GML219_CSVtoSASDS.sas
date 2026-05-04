@@ -22,7 +22,7 @@ ods listing;
 /*====================================================================================*/
 /* プロジェクトルートパスの定義（ここだけを環境に合わせて修正）                       */
 /*====================================================================================*/
-%let _root = /Users/akiko/Projects/NMC/Stat/JALSG-GML219;
+%let _root = C:/Users/AkikoSaito/Data/NMC/Stat/JALSG-GML219;
 
 /*====================================================================================*/
 /* ログファイル出力設定                                                               */
@@ -47,7 +47,7 @@ libname adslib "&_root./input/ads/202512 data";
 /*====================================================================================*/
 %macro sasds_sdtm(dsnm);
 proc import out= &dsnm
-  datafile= "&_root./input/rawdata/20251205 fixed data/GML219_cdisc_251205_1446/&dsnm..csv"
+  datafile= "&_root./input/rawdata/&dsnm..csv"
   dbms=csv replace ;
   getnames=yes ;
   datarow=2 ;
@@ -517,8 +517,8 @@ data tmp6_cga;
   set QS;
   where qscat = "CGA7";
   length cga_phase $20.;
-  if qsspid = "baseline_cga"  then cga_phase = "bl";
-  else if qsspid = "consoli1_cga" then cga_phase = "c1";
+  if qsspid = "baseline_cga"  then cga_phase = "_bl";
+  else if qsspid = "consoli1_cga" then cga_phase = "_c1";
   else delete;
 run;
 
