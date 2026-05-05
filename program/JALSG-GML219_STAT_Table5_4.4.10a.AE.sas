@@ -75,20 +75,21 @@ ods escapechar='^';
 footnote2 "^S={just=r} 出力日 &DATE";
 
 /*=====================================================================*/
-/* Section 1: AE 頻度（コース別 × Any/G1-2/G3/G4）                     */
+/* Section 1: AE 頻度（コース別 × Any/G1-2/G3/G4/G5）                     */
 /*=====================================================================*/
 
 %macro ae_row(num, name);
   data ae&num;
-    length c1 $200. c2-c5 $30.;
-    retain g1 g2 g3 g4 0;
+    length c1 $200. c2-c6 $30.;
+    retain g1 g2 g3 g4 g5 0;
     set tmp_pop end=eof;
     if _gae&num&_cycl_ = 1 then g1 + 1;
     if _gae&num&_cycl_ = 2 then g2 + 1;
     if _gae&num&_cycl_ = 3 then g3 + 1;
     if _gae&num&_cycl_ = 4 then g4 + 1;
+    if _gae&num&_cycl_ = 5 then g5 + 1;
     if eof then do;
-      any = g1 + g2 + g3 + g4;
+      any = g1 + g2 + g3 + g4 + g5;
       g12 = g1 + g2;
       c1 = "  &name";
       if any = 0 then c2 = '0 (0.0%)';
@@ -103,7 +104,10 @@ footnote2 "^S={just=r} 出力日 &DATE";
       if g4 = 0 then c5 = '0 (0.0%)';
       else c5 = compress(put(g4, 8.)) || ' (' ||
                 compress(put(round(g4 / &_nn_ * 100, .1), 8.1)) || '%)';
-      keep c1-c5;
+      if g5 = 0 then c6 = '0 (0.0%)';
+      else c6 = compress(put(g5, 8.)) || ' (' ||
+                compress(put(round(g5 / &_nn_ * 100, .1), 8.1)) || '%)';
+       keep c1-c6;
       output;
     end;
   run;
@@ -162,7 +166,7 @@ footnote2 "^S={just=r} 出力日 &DATE";
         ae11 ae12 ae13 ae14 ae15 ae16 ae17 ae18 ae19 ae20
         ae21 ae22 ae23 ae24 ae25 ae26 ae27 ae28 ae29 ae30
         ae31 ae32 ae33;
-    label c1 = '有害事象' c2 = 'Any' c3 = '1-2' c4 = '3' c5 = '4';
+    label c1 = '有害事象' c2 = 'Any' c3 = '1-2' c4 = '3' c5 = '4' c6 = '5';
   run;
 
   proc datasets lib=work nolist;
@@ -179,13 +183,14 @@ footnote2 "^S={just=r} 出力日 &DATE";
     style(header)=[just=center asis=on]
     style(column)=[just=center asis=on];
     column c1
-           ("^S={borderbottomwidth=1pt}&ctitle (n=&_nn_)|Grade" c2 c3 c4 c5);
+           ("^S={borderbottomwidth=1pt}&ctitle (n=&_nn_)|Grade" c2 c3 c4 c5 c6);
     define c1 / style(header)=[width=7.5cm just=l]
                 style(column)=[just=l];
     define c2 / style(header)=[width=2.2cm];
     define c3 / style(header)=[width=2.2cm];
     define c4 / style(header)=[width=2.2cm];
     define c5 / style(header)=[width=2.2cm];
+    define c6 / style(header)=[width=2.2cm];
   run;
 
   proc datasets lib=work nolist;
@@ -223,7 +228,7 @@ run;
 
 proc sort data=lb_nadir; by cycle lbtestcd; run;
 
-title2 '(2) 血液所見最低値（コース別、ナディール）';
+title2 '(2) 骨髄抑制（コース別、nadir）';
 title3 '解析対象集団: 全安全性解析対象集団';
 proc tabulate data=lb_nadir missing;
   class cycle testlbl / order=data;
@@ -323,8 +328,23 @@ run;
 
 title2 '(5) 感染症起因菌一覧（コース別、MB ドメイン由来）';
 title3 '解析対象集団: 全安全性解析対象集団（起因菌が記録された症例のみ）';
-proc print data=mb_listing noobs label width=min;
-  var usubjid mb_i1 mb_i2 mb_c1 mb_c2 mb_c3;
+proc report data=mb_listing split='|' nowd
+  style(report) =[fontsize=8pt]
+  style(header) =[fontsize=8pt fontweight=bold just=center]
+  style(column) =[fontsize=8pt just=l];
+  column usubjid mb_i1 mb_i2 mb_c1 mb_c2 mb_c3;
+  define usubjid / display label='症例番号'
+    style(header)=[cellwidth=2.8cm] style(column)=[cellwidth=2.8cm];
+  define mb_i1 / display
+    style(header)=[cellwidth=2.6cm] style(column)=[cellwidth=2.6cm];
+  define mb_i2 / display
+    style(header)=[cellwidth=2.6cm] style(column)=[cellwidth=2.6cm];
+  define mb_c1 / display
+    style(header)=[cellwidth=2.6cm] style(column)=[cellwidth=2.6cm];
+  define mb_c2 / display
+    style(header)=[cellwidth=2.6cm] style(column)=[cellwidth=2.6cm];
+  define mb_c3 / display
+    style(header)=[cellwidth=2.6cm] style(column)=[cellwidth=2.6cm];
 run;
 
 ods rtf close;
