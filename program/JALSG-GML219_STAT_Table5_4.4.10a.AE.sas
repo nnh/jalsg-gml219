@@ -328,23 +328,8 @@ run;
 
 title2 '(5) 感染症起因菌一覧（コース別、MB ドメイン由来）';
 title3 '解析対象集団: 全安全性解析対象集団（起因菌が記録された症例のみ）';
-proc report data=mb_listing split='|' nowd
-  style(report) =[fontsize=8pt]
-  style(header) =[fontsize=8pt fontweight=bold just=center]
-  style(column) =[fontsize=8pt just=l];
-  column usubjid mb_i1 mb_i2 mb_c1 mb_c2 mb_c3;
-  define usubjid / display label='症例番号'
-    style(header)=[cellwidth=2.8cm] style(column)=[cellwidth=2.8cm];
-  define mb_i1 / display
-    style(header)=[cellwidth=2.6cm] style(column)=[cellwidth=2.6cm];
-  define mb_i2 / display
-    style(header)=[cellwidth=2.6cm] style(column)=[cellwidth=2.6cm];
-  define mb_c1 / display
-    style(header)=[cellwidth=2.6cm] style(column)=[cellwidth=2.6cm];
-  define mb_c2 / display
-    style(header)=[cellwidth=2.6cm] style(column)=[cellwidth=2.6cm];
-  define mb_c3 / display
-    style(header)=[cellwidth=2.6cm] style(column)=[cellwidth=2.6cm];
+proc print data=mb_listing noobs label width=min;
+  var usubjid mb_i1 mb_i2 mb_c1 mb_c2 mb_c3;
 run;
 
 ods rtf close;
