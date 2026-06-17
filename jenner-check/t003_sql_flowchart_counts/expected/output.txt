@@ -1,0 +1,16 @@
+                                                      JALSG-GML219                                                      
+                                     Subject disposition flowchart counts (SAP 4.1)                                     
+
+
+      Disposition step   N
+----------------------  --
+All registered          24
+FAS (excluded: 4)       20
+Induction course 1      20
+Induction course 2      17
+Consolidation course 1  15
+Consolidation course 2  11
+Consolidation course 3   7
+Completed treatment      2
+PPS                     17
+

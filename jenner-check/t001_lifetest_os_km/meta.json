@@ -1,0 +1,8 @@
+{
+    "bundle": "t001_lifetest_os_km",
+    "source_file": "program/JALSG-GML219_STAT_Fig5_4.4.4a.OS.sas",
+    "source_blob_sha": "3a850d9baa158818c4f146b72ae99cef7d62772f",
+    "source_commit": "0576bc3574f4ba43f3012848cc0771940bd48931",
+    "tier": "mock_data",
+    "notes": "Overall Survival Kaplan-Meier (PROC LIFETEST plots=survival, OUTSURV=, %km_pt point-estimate macro, PROC PRINT of os_est). External libraw.gml219 read replaced by a 42-row synthetic GML219 dataset in autoexec with the same columns the program reads (FASFL, OS_y, os_c); Windows libname/%working_dir/proc printto/ods rtf plumbing removed. Survival logic, OUTSURV handling, %km_pt macro and final print are upstream-verbatim."
+}
