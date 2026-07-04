@@ -13,7 +13,7 @@
 ## GitHub / Box
 
 - GitHubリポジトリ：https://github.com/nnh/jalsg-gml219
-- Boxフォルダ：未定（後で記入）
+- Boxフォルダ：https://nmccrc.app.box.com/folder/336449975048
 
 対応関係の一覧はstat-hubリポジトリの [overview.md](https://github.com/saito-la/stat-hub/blob/main/overview.md) の「対象試験一覧」にも記録する。
 
