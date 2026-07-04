@@ -5,7 +5,7 @@
 * Created       : 2026/05/24
 *
 * Purpose       : 主治医照会 (2) EFSとOSの差の内訳
-*                 - EFSイベントを 非寛解(治療不応) / CR後再発 / CR後死亡(再発前) /
+*                 - EFSイベントを 非寛解(治療不応) / CR後再発 / 再発/治療不応判定確定前死亡 /
 *                   打ち切り に4分類して内訳を提示
 *                 - 1年以内のイベント発生有無 (再発・非寛解・死亡)
 *                 - EFSとOSの差を生む要因 (非死亡EFSイベントの内訳) を可視化
@@ -36,11 +36,13 @@ data work.efs;
     set olda.gml219;
     where FASFL="Y";
 
-    length efs_first $25;
-    /* 優先順: 非寛解 > CR後再発 > CR後死亡 > 打ち切り */
+    length efs_first $40;
+    /* 優先順: 非寛解 > CR後再発 > 再発/治療不応判定確定前死亡 > 打ち切り */
     if cr1yn = "NON-CR/NON-PD" then efs_first = "1_非寛解(治療不応)";
     else if cr1yn = "CR" and RLyn = "Y" then efs_first = "2_CR後再発";
-    else if upcase(dsterm2) = "DEATH" then efs_first = "3_CR後死亡(再発前)";
+    /* cr1yn未評価のまま死亡した2例もここに含まれるため「CR後死亡」ではなく
+       「再発/治療不応判定確定前死亡」とする (伊藤先生ご照会2026-06-26 Q2-4回答) */
+    else if upcase(dsterm2) = "DEATH" then efs_first = "3_再発/治療不応判定確定前死亡";
     else efs_first = "0_打ち切り";
 
     length noncr_fl relapse_fl death_fl $1;

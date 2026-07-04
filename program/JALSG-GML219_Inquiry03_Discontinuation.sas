@@ -35,10 +35,12 @@ data work.dc;
     set olda.gml219;
     where FASFL="Y";
 
-    length efs_first $25;
+    length efs_first $40;
     if cr1yn = "NON-CR/NON-PD" then efs_first = "1_非寛解(治療不応)";
     else if cr1yn = "CR" and RLyn = "Y" then efs_first = "2_CR後再発";
-    else if upcase(dsterm2) = "DEATH" then efs_first = "3_CR後死亡(再発前)";
+    /* cr1yn未評価のまま死亡した2例もここに含まれるため「CR後死亡」ではなく
+       「再発/治療不応判定確定前死亡」とする (伊藤先生ご照会2026-06-26 Q2-4回答) */
+    else if upcase(dsterm2) = "DEATH" then efs_first = "3_再発/治療不応判定確定前死亡";
     else efs_first = "0_打ち切り";
 
     /* 登録年 */
