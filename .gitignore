@@ -1,5 +1,6 @@
 .DS_Store
-.claude/
+Thumbs.db
+.claude/settings.local.json
 .rtk/
 /compare
 /input
@@ -15,5 +16,11 @@
 *.png
 *.log
 *.lst
+*.sas7bdat
+*.sas7bcat
+*.xpt
+*.sav
+*.dta
+*.zip
 /program/Archives
 program/work.sas
