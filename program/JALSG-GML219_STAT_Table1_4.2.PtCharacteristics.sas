@@ -99,12 +99,12 @@ run;
 title2 'Š³Ò”wŒi (FAS) - Šî–{‘®«EWHO/FAB•ª—Ş';
 proc tabulate data=FAS missing;
   class SEX agegrp ecogps echo_result ecg_intp
-        dxwhoterm fabclass fabgrp whogrp eln2017
+        dxwhoterm fabclass fabgrp whogrp eln2017 eln2022
         bl_bldabn bl_traml bl_infect8w
         bl_cnsstat bl_cnsyn bl_ocnsstat bl_ocnsyn;
   table
     (SEX agegrp ecogps echo_result ecg_intp
-     dxwhoterm fabclass fabgrp whogrp eln2017
+     dxwhoterm fabclass fabgrp whogrp eln2017 eln2022
      bl_bldabn bl_traml bl_infect8w
      bl_cnsstat bl_cnsyn bl_ocnsstat bl_ocnsyn),
     all='‘S‘Ì' * (n pctn='%'*f=8.1)

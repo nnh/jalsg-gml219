@@ -523,9 +523,9 @@ run;
 /*** 4. ELN 2017 リスク分類（遺伝子・染色体データから導出）                           ***/
 /***===================================================================================***/
 
-data tmp4_eln(keep=usubjid eln2017);
+data tmp4_eln(keep=usubjid eln2017 eln2022);
   set tmp3_labs;
-  length eln2017 $20.;
+  length eln2017 eln2022 $20.;
 
   /* Favorable */
   if t821='Y' or inv16='Y' or t1616='Y' then eln2017='Favorable';       /* CBF-AML */
@@ -549,6 +549,38 @@ data tmp4_eln(keep=usubjid eln2017);
      runx1='' and chroabno='' then eln2017='Unknown';
 
   label eln2017 = "ELN 2017 リスク分類";
+  /* --- eln2022: 2022年ELNリスク分類（Dohner et al. Blood 2022） --- */
+  /* Step1: 真の予後不良染色体異常（好性分子マーカーがあっても2022年版で上書きされる） */
+  if inv3='Y' or t69='Y' or t922='Y' then eln2022='Adverse';
+  else if mns5='Y' or del5q='Y' or mns7='Y' then eln2022='Adverse';
+  else if cta3km='Y' then eln2022='Adverse';                             /* 複合核型 */
+  else if mns17abn='Y' then eln2022='Adverse';
+
+  /* Step2: Favorable。NPM1変異(FLT3-ITD陰性)・CEBPA変異は染色体異常の有無によらず判定。
+     CBF-AMLはその他染色体異常(otchrabn)を伴わない場合のみ（SAP本文どおり）。
+     好性型はStep3のRUNX1/SF3B1変異によって降格しない
+     （ELN2017/2022とも「好性サブタイプと併存する場合は予後不良マーカーとして
+     用いない」と明記されているため） */
+  else if npm1='POSITIVE' and flt3itd='NEGATIVE' then eln2022='Favorable';
+  else if cebpa='POSITIVE' then eln2022='Favorable';                     /* CEBPA （二対立遺伝子変異想定） */
+  else if (t821='Y' or inv16='Y' or t1616='Y') and otchrabn ne 'Y' then eln2022='Favorable';
+
+  /* Step3: 骨髄異形成関連遺伝子変異（2022年版でSF3B1を追加）。好性型と併存しない場合のみAdverse */
+  else if runx1='POSITIVE' then eln2022='Adverse';
+  else if sf3b1='POSITIVE' then eln2022='Adverse';                       /* 2022年版で追加 */
+
+  /* Step4: Intermediate: SAP本文の中間群カテゴリ（t(9;11), t(1;22), その他染色体異常）。
+     WT NPM1 + FLT3-ITDは、2017年版のAdverse判定を設けないことでここに自然に分類される
+     （2022年版でFLT3-ITDのアレル比を問わずIntermediateとする変更に対応） */
+  else if t911='Y' or t122p13q='Y' or otchrabn='Y' then eln2022='Intermediate';
+  else eln2022='Intermediate';
+
+  /* 評価不能 */
+  if npm1='' and flt3itd='' and cebpa='' and
+     t821='' and inv16='' and t1616='' and
+     runx1='' and sf3b1='' and chroabno='' then eln2022='Unknown';
+
+  label eln2022 = "ELN 2022 リスク分類";
 run;
 
 
@@ -1473,7 +1505,9 @@ data tmp14i_sae_pt;
   aestdt = input(aestdtc, yymmdd10.);
   format aestdt yymmdd10.;
   keep usubjid aeseq saept saefl aestdt;
-  label saept  = "SAE PT（Preferred Term）"
+  label usubjid = "施設横断的に一意な被験者ID（試験全体での通し番号）"
+        aeseq  = "有害事象の通し番号（USUBJID内の連番）"
+        saept  = "SAE PT（Preferred Term）"
         saefl  = "SAE フラグ"
         aestdt = "SAE 発生日";
 run;
@@ -1706,6 +1740,8 @@ data gml219;
   else molgrp = "Other";
 
   label
+    USUBJID = "施設横断的に一意な被験者ID（試験全体での通し番号）"
+    SUBJID  = "被験者識別コード（施設内番号）"
     ind1fl = "寛解導入1実施（Y/N）"
     ind2fl = "寛解導入2実施（Y/N）"
     c1fl   = "地固め1実施（Y/N）"
@@ -1766,9 +1802,11 @@ proc export
 run;
 libname adslib clear;
 
-proc contents
-data=work.gml219;
+/* 変数一覧をExcelへ出力（PIへの項目対応表の元データ。データセット変更のたびに自動更新） */
+ods excel file="&_root./output/Contents.xlsx";
+proc contents data=work.gml219 varnum;
 run;
+ods excel close;
 
 
 /*====================================================================================*/
