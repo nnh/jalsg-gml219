@@ -24,6 +24,10 @@
 
 `eln2022`実装検証時に判明：本データセットの`runx1`変数（ラベル「RUNX1変異」）が陽性の7例中6例が、同時にt(8;21)陽性（CBF-AML、RUNX1-RUNX1T1融合）でもあった。ELNの「RUNX1変異」（点変異）はCBF-AMLとはほぼ排他的に出現するはずのマーカーであるため、この変数が実際にはRUNX1-RUNX1T1融合の確認検査（t(8;21)診断の追認）を指している可能性がある。リスク分類上は影響していない（好性サブタイプを優先するロジックのため）が、Table1等でRUNX1変異の頻度として報告する場合は要注意。DM等への確認を推奨。
 
+## Claude連携のBoxアップロードツールが共同作業者設定フォルダで使えない
+
+2026-07-05、更新したプログラム3本を Box `program`フォルダ（[JALSG-GML219配下](https://nmccrc.app.box.com/folder/354039003645)）へ反映しようとしたところ、`upload_file_version`が「The upload operation was blocked because the file is externally accessible.」で拒否された。原因は当該フォルダに共同作業者（`hasCollaborations: true`）が設定されていること。この安全ガードはClaude連携のBox書き込み系ツール（`upload_file`/`upload_file_version`等）に組み込まれており、共同作業者が1人でも設定されたフォルダ・ファイルへは書き込み不可（読み取り系ツールは問題なく動作する）。JALSG-GML219のBoxフォルダは試験関係者との共有が前提のため、実質的にこのツール経由でのアップロードは使えない。今回はユーザーが手動アップロードで対応した。回避方法（ローカルBox Drive同期パスの利用等）は次回までに調査予定。
+
 ## 未着手の解析候補（PIより要望あり）
 
 - CGA7の別視点での解析（個別ドメイン別、B-score連続値、時点間変化など。関心の視点の指定待ち）
