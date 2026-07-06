@@ -1,0 +1,139 @@
+Jenner 0.1.0 (Unlicensed - limited to 100 observations)
+Get a license at https://jenneranalytics.com/license
+
+NOTE: Option OBS changed to 100.
+NOTE: DATA gml219
+
+NOTE: Processing inline DATALINES (42 lines)
+
+NOTE: Read 42 rows from DATALINES.
+NOTE: Wrote gml219 (42 rows, 4 columns).
+NOTE: DATA elapsed:
+  wall  0.00 seconds
+  cpu   0.00 seconds
+NOTE: DATA FAS
+
+
+NOTE: Read 42 rows from gml219.
+NOTE: Wrote FAS (40 rows, 4 columns).
+NOTE: DATA elapsed:
+  wall  0.00 seconds
+  cpu   0.00 seconds
+NOTE: Option TITLE changed to JALSG-GML219.
+NOTE: Option TITLE2 changed to Overall Survival (2yr / 5yr).
+NOTE: Option TITLE3 changed to Analysis population: FAS.
+NOTE: PROC LIFETEST data=FAS
+
+NOTE: Using Python lifelines version 0.30.3
+NOTE: ODS plot written: lifetest_survival.spec.json
+NOTE: ODS plot written: survival_basic.spec.json
+NOTE: PROC LIFETEST completed.
+NOTE: Option TITLE2 changed to OS point estimates.
+NOTE: Option TITLE3 changed to  .
+NOTE: PROC LIFETEST data=FAS
+
+NOTE: Using Python lifelines version 0.30.3
+NOTE: OUTSURV dataset '_surv0' written to: /tmp/work/work/b6d8682c-d249-4b4a-b946-ed0a53c3b816/_surv0.avro
+NOTE: PROC LIFETEST completed.
+NOTE: DATA _s1y
+
+
+NOTE: Read 17 rows from _surv0.
+NOTE: Wrote _s1y (7 rows, 6 columns).
+NOTE: DATA elapsed:
+  wall  0.00 seconds
+  cpu   0.00 seconds
+NOTE: PROC SORT data=_s1y
+
+NOTE: Unlicensed mode - input limited to 100 observations.
+NOTE: Read 7 rows from _s1y.
+NOTE: Wrote _s1y (7 rows, 6 columns).
+NOTE: PROC SORT statement used.
+NOTE: DATA _e1y
+
+
+NOTE: Read 7 rows from _s1y.
+NOTE: Wrote _e1y (1 rows, 4 columns).
+NOTE: DATA elapsed:
+  wall  0.00 seconds
+  cpu   0.00 seconds
+NOTE: DATA _s2y
+
+
+NOTE: Read 17 rows from _surv0.
+NOTE: Wrote _s2y (13 rows, 6 columns).
+NOTE: DATA elapsed:
+  wall  0.00 seconds
+  cpu   0.00 seconds
+NOTE: PROC SORT data=_s2y
+
+NOTE: Unlicensed mode - input limited to 100 observations.
+NOTE: Read 13 rows from _s2y.
+NOTE: Wrote _s2y (13 rows, 6 columns).
+NOTE: PROC SORT statement used.
+NOTE: DATA _e2y
+
+
+NOTE: Read 13 rows from _s2y.
+NOTE: Wrote _e2y (1 rows, 4 columns).
+NOTE: DATA elapsed:
+  wall  0.00 seconds
+  cpu   0.00 seconds
+NOTE: DATA _s3y
+
+
+NOTE: Read 17 rows from _surv0.
+NOTE: Wrote _s3y (16 rows, 6 columns).
+NOTE: DATA elapsed:
+  wall  0.00 seconds
+  cpu   0.00 seconds
+NOTE: PROC SORT data=_s3y
+
+NOTE: Unlicensed mode - input limited to 100 observations.
+NOTE: Read 16 rows from _s3y.
+NOTE: Wrote _s3y (16 rows, 6 columns).
+NOTE: PROC SORT statement used.
+NOTE: DATA _e3y
+
+
+NOTE: Read 16 rows from _s3y.
+NOTE: Wrote _e3y (1 rows, 4 columns).
+NOTE: DATA elapsed:
+  wall  0.00 seconds
+  cpu   0.00 seconds
+NOTE: DATA _s5y
+
+
+NOTE: Read 17 rows from _surv0.
+NOTE: Wrote _s5y (17 rows, 6 columns).
+NOTE: DATA elapsed:
+  wall  0.00 seconds
+  cpu   0.00 seconds
+NOTE: PROC SORT data=_s5y
+
+NOTE: Unlicensed mode - input limited to 100 observations.
+NOTE: Read 17 rows from _s5y.
+NOTE: Wrote _s5y (17 rows, 6 columns).
+NOTE: PROC SORT statement used.
+NOTE: DATA _e5y
+
+
+NOTE: Read 17 rows from _s5y.
+NOTE: Wrote _e5y (1 rows, 4 columns).
+NOTE: DATA elapsed:
+  wall  0.00 seconds
+  cpu   0.00 seconds
+NOTE: DATA os_est
+
+
+NOTE: Read 1 rows from _e1y.
+NOTE: Read 2 rows from _e2y.
+NOTE: Read 3 rows from _e3y.
+NOTE: Read 4 rows from _e5y.
+NOTE: Wrote os_est (4 rows, 4 columns).
+NOTE: DATA elapsed:
+  wall  0.00 seconds
+  cpu   0.00 seconds
+NOTE: PROC PRINT data=os_est
+
+NOTE: PROC PRINT completed: 4 observations printed, 4 variables

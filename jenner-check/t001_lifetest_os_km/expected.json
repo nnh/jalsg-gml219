@@ -1,0 +1,22 @@
+{
+    "_captured_at": "2026-06-17T18:17:40Z",
+    "_captured_from": "https://api.jenneranalytics.com/v1/run",
+    "_captured_run_id": "r_019ed6cc5f2a72e3b8a06d6ccf17d790",
+    "status": "ok",
+    "exit_code": 0,
+    "log_contains": [
+        "NOTE: Option OBS changed to 100.",
+        "NOTE: Wrote FAS (40 rows, 4 columns).",
+        "NOTE: PROC LIFETEST data=FAS",
+        "NOTE: PROC LIFETEST completed.",
+        "NOTE: Wrote os_est (4 rows, 4 columns)."
+    ],
+    "log_does_not_contain": [
+        "ERROR:",
+        "[JENNER-ERROR"
+    ],
+    "diagnostics": {
+        "parse_warnings": [],
+        "runtime_warnings": []
+    }
+}

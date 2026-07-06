@@ -1,0 +1,125 @@
+                                                      JALSG-GML219                                                      
+                                        Response after induction course 1 (FAS)                                         
+
+-------------------------------------------
+|                       |      Total      |
+|                       |-----------------|
+|                       |   N    |   %    |
+|-----------------------+--------+--------|
+|rs_ev1                 |        |        |
+|-----------------------|        |        |
+|CR (complete remission)|      14|    70.0|
+|-----------------------+--------+--------|
+|NE (not evaluable)     |       3|    15.0|
+|-----------------------+--------+--------|
+|NON-CR/NON-PD          |       3|    15.0|
+-------------------------------------------
+
+                                                      JALSG-GML219                                                      
+                                Response after induction course 2 (2-course recipients)                                 
+
+-------------------------------------------
+|                       |      Total      |
+|                       |-----------------|
+|                       |   N    |   %    |
+|-----------------------+--------+--------|
+|rs_ev2                 |        |        |
+|-----------------------|        |        |
+|CR (complete remission)|       9|    64.3|
+|-----------------------+--------+--------|
+|NE (not evaluable)     |       3|    21.4|
+|-----------------------+--------+--------|
+|NON-CR/NON-PD          |       2|    14.3|
+-------------------------------------------
+
+                                                      JALSG-GML219                                                      
+                                                  CR achievement (FAS)                                                  
+
+--------------------------------
+|            |      Total      |
+|            |-----------------|
+|            |   N    |   %    |
+|------------+--------+--------|
+|crfl        |        |        |
+|------------|        |        |
+|Not achieved|       5|    25.0|
+|------------+--------+--------|
+|Achieved    |      15|    75.0|
+--------------------------------
+
+                                                      JALSG-GML219                                                      
+                                                  CR achievement (FAS)                                                  
+                                       CR rate 95% confidence interval (binomial)                                       
+
+                                                   The FREQ Procedure
+
+                                  Cumulative    Cumulative
+crfl    Frequency    Percent     Frequency      Percent
+-------------------------------------------------------------
+N               5     25.00            5        25.00
+Y              15     75.00           20       100.00
+
+Binomial Proportion for Y
+
+Proportion                           0.7500
+ASE                                  0.0968
+Test of H0: Proportion = 0.50        0.0253
+95% Conf Limits                0.5313 0.8881
+
+95% Confidence Limits for Proportions
+
+crfl      Proportion             ASE    Lower 95% CL    Upper 95% CL
+------------------------------------------------------------
+N             0.2500          0.0968          0.1119          0.4687
+Y             0.7500          0.0968          0.5313          0.8881
+                                                      JALSG-GML219                                                      
+                                                 LFS achievement (FAS)                                                  
+                                       CR rate 95% confidence interval (binomial)                                       
+
+--------------------------------
+|            |      Total      |
+|            |-----------------|
+|            |   N    |   %    |
+|------------+--------+--------|
+|lfsfl       |        |        |
+|------------|        |        |
+|Not achieved|       9|    45.0|
+|------------+--------+--------|
+|Achieved    |      11|    55.0|
+--------------------------------
+
+                                                      JALSG-GML219                                                      
+                                                 LFS achievement (FAS)                                                  
+                                      LFS rate 95% confidence interval (binomial)                                       
+
+                                                   The FREQ Procedure
+
+                                   Cumulative    Cumulative
+lfsfl    Frequency    Percent     Frequency      Percent
+--------------------------------------------------------------
+N                9     45.00            9        45.00
+Y               11     55.00           20       100.00
+
+Binomial Proportion for Y
+
+Proportion                           0.5500
+ASE                                  0.1112
+Test of H0: Proportion = 0.50        0.6547
+95% Conf Limits                0.3421 0.7418
+
+95% Confidence Limits for Proportions
+
+lfsfl      Proportion             ASE    Lower 95% CL    Upper 95% CL
+-------------------------------------------------------------
+N              0.4500          0.1112          0.2582          0.6579
+Y              0.5500          0.1112          0.3421          0.7418
+                                                      JALSG-GML219                                                      
+                                       Days from enrollment to CR (CR achievers)                                        
+                                      LFS rate 95% confidence interval (binomial)                                       
+
+-------------------------------------------------------------------------
+|   N    |  MEAN  |   SD   |  MIN   |  25%   | MEDIAN |  75%   |  MAX   |
+|--------+--------+--------+--------+--------+--------+--------+--------|
+|      15|    43.0|     4.0|    36.0|    40.5|    42.0|    45.0|    53.0|
+-------------------------------------------------------------------------
+

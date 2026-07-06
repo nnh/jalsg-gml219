@@ -1,0 +1,8 @@
+{
+    "bundle": "t002_tabulate_crrate",
+    "source_file": "program/JALSG-GML219_STAT_Table3_4.4.7.CRrate.sas",
+    "source_blob_sha": "8df06a28cebfac6232ce7805ac926ec6ef684ae5",
+    "source_commit": "0576bc3574f4ba43f3012848cc0771940bd48931",
+    "tier": "mock_data",
+    "notes": "CR/LFS rate table: PROC TABULATE categorical+summary, PROC FREQ binomial(level='Y') CL exact 95% CIs, derived daysto1cr/daysto1lfs from rfstdt/crdt/lfsdt dates. External libraw.gml219 replaced by 20-row synthetic GML219 in autoexec with the columns the program reads (rs_ev1/2, ind2fl, crfl, lfsfl, tffl, tftype, rfstdt, crdt, lfsdt). Japanese PROC FORMAT labels transliterated to ASCII for locale-independent listing; TABULATE/FREQ statements and the derivation DATA step are upstream-verbatim."
+}

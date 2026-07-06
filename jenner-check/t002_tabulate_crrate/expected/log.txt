@@ -1,0 +1,54 @@
+Jenner 0.1.0 (Unlicensed - limited to 100 observations)
+Get a license at https://jenneranalytics.com/license
+
+NOTE: Option OBS changed to 100.
+NOTE: DATA gml219
+
+NOTE: Processing inline DATALINES (20 lines)
+
+NOTE: Read 20 rows from DATALINES.
+NOTE: Wrote gml219 (20 rows, 12 columns).
+NOTE: DATA elapsed:
+  wall  0.00 seconds
+  cpu   0.00 seconds
+NOTE: DATA FAS
+
+
+NOTE: Read 20 rows from gml219.
+NOTE: Wrote FAS (20 rows, 12 columns).
+NOTE: DATA elapsed:
+  wall  0.00 seconds
+  cpu   0.00 seconds
+NOTE: DATA FAS
+
+
+NOTE: Read 20 rows from FAS.
+NOTE: Wrote FAS (20 rows, 14 columns).
+NOTE: DATA elapsed:
+  wall  0.00 seconds
+  cpu   0.00 seconds
+NOTE: PROC FORMAT library=WORK
+
+NOTE: FORMAT $respfm defined (4 ranges).
+NOTE: FORMAT $crflfm defined (2 ranges).
+NOTE: FORMAT $tffm defined (2 ranges).
+NOTE: FORMAT $tftypef defined (4 ranges).
+NOTE: Option TITLE changed to JALSG-GML219.
+NOTE: Option TITLE2 changed to Response after induction course 1 (FAS).
+NOTE: PROC TABULATE
+NOTE: Option TITLE2 changed to Response after induction course 2 (2-course recipients).
+NOTE: PROC TABULATE
+NOTE: Option TITLE2 changed to CR achievement (FAS).
+NOTE: PROC TABULATE
+NOTE: Option TITLE3 changed to CR rate 95% confidence interval (binomial).
+NOTE: PROC FREQ
+NOTE: ODS plot written: freq_crfl.spec.json
+NOTE: PROC FREQ statement used.
+NOTE: Option TITLE2 changed to LFS achievement (FAS).
+NOTE: PROC TABULATE
+NOTE: Option TITLE3 changed to LFS rate 95% confidence interval (binomial).
+NOTE: PROC FREQ
+NOTE: ODS plot written: freq_lfsfl.spec.json
+NOTE: PROC FREQ statement used.
+NOTE: Option TITLE2 changed to Days from enrollment to CR (CR achievers).
+NOTE: PROC TABULATE

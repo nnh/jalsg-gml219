@@ -1,0 +1,8 @@
+{
+    "bundle": "t004_phreg_cox_efs",
+    "source_file": "program/202512 pgm v1/JALSG-GML219_STAT_Table6_4.x.x.EFSf_cox.sas",
+    "source_blob_sha": "f514e3f8c32e193a6ba758762d5e4e8abf1530c1",
+    "source_commit": "0576bc3574f4ba43f3012848cc0771940bd48931",
+    "tier": "mock_data",
+    "notes": "Univariate Cox PH models for EFS: two of the upstream single-covariate PROC PHREG models (CLASS SEX(ref='M') and CLASS bl_wbcc, MODEL EFS_y*EFS_c(0)=covar / rl) kept verbatim. External libraw read replaced by a 30-row synthetic dataset in autoexec with the columns the models read (FASFL, EFS_y, EFS_c, SEX, bl_wbcc). WBC category labels rendered in ASCII; CLASS ref coding, MODEL time*censor(0)=covar form and RL option are upstream-verbatim."
+}

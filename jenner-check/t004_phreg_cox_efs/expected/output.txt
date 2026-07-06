@@ -1,0 +1,52 @@
+                                                      JALSG-GML219                                                      
+                                          Univariate Cox PH model: EFS by SEX                                           
+
+        The PHREG Procedure        
+
+Criterion                     Value
+----------------------  -----------
+Number of Observations           30
+Number of Events                 13
+-2 LOG L                     70.664
+Convergence Status      0 Converged
+
+      Testing Global Null Hypothesis: BETA=0      
+
+Test              Chi-Square        DF  Pr > ChiSq
+----------------  ----------  --------  ----------
+Likelihood Ratio     11.0551         1      0.0009
+Wald                  7.5967         1      0.0058
+Score (Log-Rank)     10.7478         1      0.0010
+
+                                   Analysis of Maximum Likelihood Estimates                                    
+
+Parameter        DF  Estimate  Standard Error  Chi-Square  Pr > ChiSq  Hazard Ratio  95% Lower CL  95% Upper CL
+---------  --------  --------  --------------  ----------  ----------  ------------  ------------  ------------
+SEX_F             1  -2.13234         0.77365      7.5967      0.0058         0.119         0.026         0.540
+
+                                                      JALSG-GML219                                                      
+                                 Univariate Cox PH model: EFS by baseline WBC category                                  
+
+        The PHREG Procedure        
+
+Criterion                     Value
+----------------------  -----------
+Number of Observations           30
+Number of Events                 13
+-2 LOG L                     74.772
+Convergence Status      0 Converged
+
+      Testing Global Null Hypothesis: BETA=0      
+
+Test              Chi-Square        DF  Pr > ChiSq
+----------------  ----------  --------  ----------
+Likelihood Ratio      6.9474         1      0.0084
+Wald                  5.6908         1      0.0171
+Score (Log-Rank)      6.9005         1      0.0086
+
+                                          Analysis of Maximum Likelihood Estimates                                          
+
+Parameter                     DF  Estimate  Standard Error  Chi-Square  Pr > ChiSq  Hazard Ratio  95% Lower CL  95% Upper CL
+----------------------  --------  --------  --------------  ----------  ----------  ------------  ------------  ------------
+BL_WBCC_UNDER 3,000/UL         1  -1.58477         0.66432      5.6908      0.0171         0.205         0.056         0.754
+

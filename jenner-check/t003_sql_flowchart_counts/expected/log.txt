@@ -1,0 +1,40 @@
+Jenner 0.1.0 (Unlicensed - limited to 100 observations)
+Get a license at https://jenneranalytics.com/license
+
+NOTE: Option OBS changed to 100.
+NOTE: DATA gml219
+
+NOTE: Processing inline DATALINES (24 lines)
+
+NOTE: Read 24 rows from DATALINES.
+NOTE: Wrote gml219 (24 rows, 7 columns).
+NOTE: DATA elapsed:
+  wall  0.00 seconds
+  cpu   0.00 seconds
+NOTE: PROC SQL 
+
+NOTE: Macro variable N_TOTAL = 24
+NOTE: Macro variable N_FAS = 20
+NOTE: Macro variable N_IND2 = 17
+NOTE: Macro variable N_C1 = 15
+NOTE: Macro variable N_C2 = 11
+NOTE: Macro variable N_C3 = 7
+NOTE: Macro variable N_DISC_IND1 = 3
+NOTE: Macro variable N_DISC_IND2 = 2
+NOTE: Macro variable N_DISC_C1 = 4
+NOTE: Macro variable N_DISC_C2 = 4
+NOTE: Macro variable N_PPS = 17
+NOTE: PROC SQL statement used.
+NOTE: n_total=24 n_fas=20 n_excl=4 n_comp=2
+NOTE: DATA flowchart
+
+
+NOTE: Wrote flowchart (9 rows, 2 columns).
+NOTE: DATA elapsed:
+  wall  0.00 seconds
+  cpu   0.00 seconds
+NOTE: Option TITLE changed to JALSG-GML219.
+NOTE: Option TITLE2 changed to Subject disposition flowchart counts (SAP 4.1).
+NOTE: PROC PRINT data=flowchart
+
+NOTE: PROC PRINT completed: 9 observations printed, 2 variables

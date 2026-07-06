@@ -1,0 +1,8 @@
+{
+    "bundle": "t003_sql_flowchart_counts",
+    "source_file": "program/JALSG-GML219_STAT_Fig0_4.1.Flowchart.sas",
+    "source_blob_sha": "7f9c2ef48426f64e446d58adcf226a590d33850c",
+    "source_commit": "0576bc3574f4ba43f3012848cc0771940bd48931",
+    "tier": "mock_data",
+    "notes": "Subject-disposition flowchart counts: the upstream PROC SQL block deriving every box count via 'select count(*) into :macrovar trimmed from gml219 where <flag combination>' plus the %eval derivations, kept verbatim. External libraw.gml219 replaced by a 24-row synthetic GML219 in autoexec with the disposition flags the program counts on (fasfl, ind2fl, c1fl, c2fl, c3fl, ppsfl). Results presented via PROC PRINT instead of the upstream SGPLOT/annotate rendering; SQL count expressions are upstream-verbatim."
+}
